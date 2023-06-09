@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+<link
+	rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous"
+/>
+<title>Foto Album Home</title>
+</head>
+<body>
+	<th:block th:replace="frags/header :: header"></th:block>
+	<main class="container text-center">
+		<h1 class="my-5">Foto</h1>
+		<form class="d-flex justify-content-center mb-3" method="POST">
+			<input class="me-2" type="text" name="title" th:value=${searchTerm}>
+			<button class="btn btn-secondary">Cerca</button>
+		</form>
+		<a th:href="@{auth/photos/create}" class="btn btn-success mb-3" sec:authorize="hasAuthority('ADMIN')">Aggiungi foto</a>
+		<div class="row row-cols-3 justify-content-center">
+			<div class="col mb-3" th:each="photo : ${photos}" th:object="${photo}">
+				<div  class="card p-3 h-100">
+					<h3 class="my-3">[[ *{title} ]]</h3>
+					<img class="img-fluid mb-3" th:alt="*{title}" th:src="*{imageUrl}">
+					<p class="mb-3">[[*{description}]]</p>
+					<h5 th:unless="*{categories.isEmpty()}">Categorie</h5>
+					<ul class="list-unstyled">
+						<li th:each="category : *{categories}">[[ ${category.name} ]]</li>
+					</ul>
+					<div class="buttons d-flex justify-content-center g-2">
+						<a th:href="@{/{id} (id=*{id})}" class="btn btn-primary"><i class="fa-solid fa-eye"></i></a>
+						<a th:href="@{/auth/photos/edit/{id} (id=*{id})}" sec:authorize="hasAuthority('ADMIN')" class="btn btn-warning ms-2"><i class="fa-regular fa-pen-to-square"></i></a>
+						<form class="ms-2" sec:authorize="hasAuthority('ADMIN')" th:action="@{/auth/photos/delete/{id} (id=*{id})}" method="POST">
+							<button class="btn btn-danger"><i class="fa-regular fa-trash-can"></i></button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</main>
+</body>
+</html>

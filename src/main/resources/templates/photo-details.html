@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+<link
+	rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous"
+/>
+<title>Foto Album Home</title>
+</head>
+<body>
+	<th:block th:replace="frags/header :: header"></th:block>
+	<main class="container text-center" th:object="${photo}">
+		<h1 class="my-5">[[ *{title} ]]</h1>
+		<img class="img-fluid mb-3" th:alt="*{title}" th:src="*{imageUrl}">
+		<p class="mb-3">[[*{description}]]</p>
+		<h5 th:unless="*{categories.isEmpty()}">Categorie</h5>
+		<ul class="list-unstyled">
+			<li th:each="category : *{categories}">[[ ${category.name} ]]</li>
+		</ul>
+		<div class="buttons d-flex justify-content-center g-2" sec:authorize="hasAuthority('ADMIN')">
+			<a th:href="@{/auth/photos/edit/{id} (id=*{id})}" class="btn btn-warning"><i class="fa-regular fa-pen-to-square"></i></a>
+			<form class="ms-2" sec:authorize="hasAuthority('ADMIN')" th:action="@{/auth/photos/delete/{id} (id=*{id})}" method="POST">
+				<button class="btn btn-danger"><i class="fa-regular fa-trash-can"></i></button>
+			</form>
+		</div>
+		<div th:unless="*{messages.isEmpty()}" class="messages">
+			<h2 class="mb-3">Messaggi</h2>
+			<div class="row row-cols-1 justify-content-center">
+			<div th:each="message : *{messages}" class="col d-flex justify-content-center" th:object="${message}">
+				<div class="col-6 text-center border p-2 mb-2">
+					<p class="mb-3">Da: [[ *{email} ]]</p>
+					<p class="mb-0">Messaggio: <br> [[ *{message} ]]</p>
+				</div>
+			</div>
+		</div>
+		</div>
+	</main>
+</body>
+</html>

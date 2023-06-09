@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+<link
+	rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous"
+/>
+<title>Crea Categoria</title>
+</head>
+<body>
+	<th:block th:replace="frags/header :: header"></th:block>
+	<main class="container text-center">
+		<h1 class="mb-5">Crea Categoria</h1>
+		<form class="d-flex flex-column align-items-center" method="POST">
+			<label for="name">Nome</label>
+			<input type="text" id="name" name="name" th:value="${category.name}">
+			<small 
+				class="text-danger mb-3"
+				th:if="${errors != null && errors.hasFieldErrors('name')}"
+			>
+				[[ ${errors.getFieldError('name').defaultMessage} ]]
+			</small>
+			<button class="btn btn-success mt-3">Crea</button>
+		</form>
+	</main>	
+</body>
+</html>
