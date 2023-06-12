@@ -21,13 +21,13 @@
 		<ul class="list-unstyled">
 			<li th:each="category : *{categories}">[[ ${category.name} ]]</li>
 		</ul>
-		<div class="buttons d-flex justify-content-center mb-5" sec:authorize="hasAuthority('ADMIN')">
-			<a th:href="@{/auth/photos/edit/{id} (id=*{id})}" class="btn btn-warning"><i class="fa-regular fa-pen-to-square"></i></a>
-			<form class="ms-2" sec:authorize="hasAuthority('ADMIN')" th:action="@{/auth/photos/delete/{id} (id=*{id})}" method="POST">
+		<div class="buttons d-flex justify-content-center mb-5" sec:authorize="hasAuthority('ADMIN')" th:if="*{user.id} == ${userId}")>
+			<a th:href="@{/user/auth/photos/edit/{id} (id=*{id})}" class="btn btn-warning"><i class="fa-regular fa-pen-to-square"></i></a>
+			<form class="ms-2" sec:authorize="hasAuthority('ADMIN')" th:action="@{/user/auth/photos/delete/{id} (id=*{id})}" method="POST">
 				<button class="btn btn-danger"><i class="fa-regular fa-trash-can"></i></button>
 			</form>
 		</div>
-		<div sec:authorize="hasAuthority('ADMIN')" th:unless="*{messages.isEmpty()}" class="messages">
+		<div sec:authorize="hasAuthority('ADMIN')" th:unless="${photo.messages.isEmpty() or photo.user.id != userId}" class="messages">
 			<h2 class="mb-3">Messaggi</h2>
 			<div class="row row-cols-1 justify-content-center">
 			<div th:each="message : *{messages}" class="col d-flex justify-content-center" th:object="${message}">

@@ -42,20 +42,22 @@ public class SpringIlMioFotoalbumApplication  implements CommandLineRunner{
 	public void run(String... args) throws Exception {
 		
 
+		Role superadmin = new Role("SUPERADMIN");
 		Role admin = new Role("ADMIN");
-		Role user = new Role("USER");
 		
+		roleService.save(superadmin);
 		roleService.save(admin);
-		roleService.save(user);
 		
 		final String adminPsw = new BCryptPasswordEncoder().encode("admin");
 		final String userPsw = new BCryptPasswordEncoder().encode("user");
 		
-		User u1 = new User("admin", adminPsw, admin);
-		User u2 = new User("user", userPsw, user);
+		User u1 = new User("admin", adminPsw, superadmin);
+		User u2 = new User("user1", userPsw, admin);
+		User u3 = new User("user2", userPsw, admin);
 		
 		userService.save(u1);
 		userService.save(u2);
+		userService.save(u3);
 		
 		Category c1 = new Category("Paesaggi");
 		Category c2 = new Category("Artistica");
@@ -69,11 +71,11 @@ public class SpringIlMioFotoalbumApplication  implements CommandLineRunner{
 		categoryService.save(c4);
 		categoryService.save(c5);
 		
-		Photo p1 = new Photo("foto 1", "descrizione", "https://picsum.photos/id/180/150", true, c1, c2);
-		Photo p2 = new Photo("foto 2", "descrizione", "https://picsum.photos/id/275/150", true, c3, c2, c4);
-		Photo p3 = new Photo("foto 3", "descrizione", "https://picsum.photos/id/355/150", true, c1, c5);
-		Photo p4 = new Photo("foto 4", "descrizione", "https://picsum.photos/id/401/150", true);
-		Photo p5 = new Photo("foto 5", "descrizione", "https://picsum.photos/id/506/150", false, c3, c2);
+		Photo p1 = new Photo("foto 1", "descrizione", "https://picsum.photos/id/180/150", true, u3, c1, c2);
+		Photo p2 = new Photo("foto 2", "descrizione", "https://picsum.photos/id/275/150", true, u3, c3, c2, c4);
+		Photo p3 = new Photo("foto 3", "descrizione", "https://picsum.photos/id/355/150", true, u2, c1, c5);
+		Photo p4 = new Photo("foto 4", "descrizione", "https://picsum.photos/id/401/150", true, u2);
+		Photo p5 = new Photo("foto 5", "descrizione", "https://picsum.photos/id/506/150", false, u3, c3, c2);
 		
 		photoService.save(p1);
 		photoService.save(p2);

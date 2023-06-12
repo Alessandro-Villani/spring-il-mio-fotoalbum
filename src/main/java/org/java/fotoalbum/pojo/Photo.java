@@ -3,15 +3,19 @@ package org.java.fotoalbum.pojo;
 import java.util.Arrays;
 import java.util.List;
 
+import org.java.fotoalbum.pojo.auth.User;
+
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonSetter;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 
@@ -38,24 +42,29 @@ public class Photo {
 	@JsonManagedReference
 	private List<Category> categories;
 	
-	@OneToMany(mappedBy = "photo")
+	@OneToMany(mappedBy = "photo", cascade = CascadeType.REMOVE)
 	@JsonManagedReference
 	private List<Message> messages;
 	
+	@ManyToOne
+	@JsonManagedReference
+	private User user;
+	
 	public Photo() {}
 	
-	public Photo(String title, String description, String imageUrl, Boolean visibility) {
+	public Photo(String title, String description, String imageUrl, Boolean visibility, User user) {
 		
 		setTitle(title);
 		setDescription(description);
 		setImageUrl(imageUrl);
 		setVisibility(visibility);
+		setUser(user);
 		
 	}
 	
-	public Photo (String title, String description, String imageUrl, Boolean visibility, Category... categories) {
+	public Photo (String title, String description, String imageUrl, Boolean visibility, User user, Category... categories) {
 		
-		this(title, description, imageUrl, visibility);
+		this(title, description, imageUrl, visibility, user);
 		
 		setCategories(categories);
 		
@@ -131,6 +140,16 @@ public class Photo {
 
 	public void setMessages(List<Message> messages) {
 		this.messages = messages;
+	}
+	
+	
+
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 
 	@Override

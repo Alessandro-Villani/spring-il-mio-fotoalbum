@@ -1,23 +1,21 @@
 package org.java.fotoalbum.controller;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
-import org.java.fotoalbum.pojo.Category;
 import org.java.fotoalbum.pojo.Photo;
-import org.java.fotoalbum.services.CategoryService;
+import org.java.fotoalbum.pojo.auth.User;
 import org.java.fotoalbum.services.PhotoService;
+import org.java.fotoalbum.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import jakarta.validation.Valid;
 
 @Controller
 public class PhotoController {
@@ -26,7 +24,7 @@ public class PhotoController {
 	private PhotoService photoService;
 	
 	@Autowired
-	private CategoryService categoryService;
+	private UserService userService;
 	
 	@GetMapping("/")
 	public String goToHomePage(Model model) {
@@ -52,7 +50,16 @@ public class PhotoController {
 	}
 	
 	@GetMapping("/{id}")
-	public String goToPhotoDetails(Model model, @PathVariable("id") int id) {
+	public String goToPhotoDetails(Model model, @PathVariable("id") int id, Principal principal) {
+		
+		if(principal != null) {
+			String userName = principal.getName();
+			
+			User user = (User) userService.loadUserByUsername(userName);
+			
+			model.addAttribute("userId", user.getId());
+		} else model.addAttribute("userId", -1);
+		
 		
 		Optional<Photo> optPhoto = photoService.findById(id);
 		
@@ -63,87 +70,21 @@ public class PhotoController {
 		return "photo-details";
 	}
 	
-	@GetMapping("auth/photos/create")
-	public String createPhoto(Model model) {
-		
-		List<Category> categories = categoryService.findAll();
-		
-		model.addAttribute("photo", new Photo());
-		model.addAttribute("categories", categories);
-		
-		return "photo-create";
-		
-	}
-	
-	@PostMapping("auth/photos/create")
-	public String storePhoto(Model model, @Valid @ModelAttribute Photo photo, BindingResult bindingResult) {
-		
-		if(bindingResult.hasErrors()) {
-			List<Category> categories = categoryService.findAll();
-			
-			model.addAttribute("photo", photo);
-			model.addAttribute("errors", bindingResult);
-			model.addAttribute("categories", categories);
-			
-			return "photo-create";
-		}
-		
-		photoService.save(photo);
-		
-		return "redirect:/";
-		
-	}
-	
-	@GetMapping("auth/photos/edit/{id}")
-	public String editPhoto(Model model, @PathVariable int id) {
-		
-		
+	@PostMapping("admin/auth/photos/{id}/toggle-visibility")
+	public String toggleVisibility(@PathVariable("id") int id) {
 		
 		Optional<Photo> optPhoto = photoService.findById(id);
+		
 		Photo photo = optPhoto.get();
 		
-		List<Category> categories = categoryService.findAll();
+		if(photo.getVisibility() == null) photo.setVisibility(true);
+		else photo.setVisibility(!photo.getVisibility());
 		
-		model.addAttribute("photo", photo);
-		model.addAttribute("categories", categories);
-		
-		return "photo-edit";
-		
-	}
-	
-	@PostMapping("auth/photos/update/{id}")
-	public String updatePhoto(Model model, @PathVariable int id, @ModelAttribute @Valid Photo photo, BindingResult bindingResult) {
-		
-		
-		if(bindingResult.hasErrors()) {
-			
-			List<Category> categories = categoryService.findAll();
-			
-			model.addAttribute("photo", photo);
-			model.addAttribute("errors", bindingResult);
-			model.addAttribute("categories", categories);
-			
-			return "photo-edit";
-			
-		}
-
 		photoService.save(photo);
 		
-		return "redirect:/" + id;
-
-	}
-	
-	@PostMapping("auth/photos/delete/{id}")
-	public String deletePhoto(@PathVariable("id") int id) {
-		
-		Photo photo = photoService.findById(id).get();
-		
-		
-		photoService.delete(photo);
-		
 		return "redirect:/";
+		
 	}
-	
 	
 	
 	

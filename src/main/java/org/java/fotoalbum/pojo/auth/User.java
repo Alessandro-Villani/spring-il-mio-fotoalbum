@@ -3,18 +3,26 @@ package org.java.fotoalbum.pojo.auth;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.java.fotoalbum.pojo.Photo;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonSetter;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -36,6 +44,10 @@ public class User implements UserDetails{
 	
 	@ManyToMany(fetch  = FetchType.EAGER)
 	private Set<Role> roles;
+	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+	@JsonBackReference
+	private List<Photo> photos;
 	
 	public User() {}
 	
@@ -63,6 +75,7 @@ public class User implements UserDetails{
 		this.username = username;
 	}
 
+	@JsonIgnore
 	public String getPassword() {
 		return password;
 	}
@@ -75,6 +88,7 @@ public class User implements UserDetails{
 		return roles;
 	}
 
+	@JsonSetter
 	public void setRoles(Set<Role> roles) {
 		this.roles = roles;
 	}
@@ -83,6 +97,15 @@ public class User implements UserDetails{
 		setRoles(new HashSet<>(Arrays.asList(roles)));
 	}
 	
+	
+	public List<Photo> getPhotos() {
+		return photos;
+	}
+
+	public void setPhotos(List<Photo> photos) {
+		this.photos = photos;
+	}
+
 	@Override
 	public String toString() {
 		

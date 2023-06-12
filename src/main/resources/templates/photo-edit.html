@@ -15,7 +15,8 @@
 	<th:block th:replace="frags/header :: header"></th:block>
 	<main class="container text-center">
 		<h1 class="my-5">Modifica Foto</h1>
-		<form th:action="@{/auth/photos/update/{id} (id=*{id})}" class="d-flex flex-column align-items-center" method="POST" th:object="${photo}">
+		<form th:action="@{/user/auth/photos/update/{id} (id=*{id})}" class="d-flex flex-column align-items-center" method="POST" th:object="${photo}">
+			<input type="hidden" name="user" th:value="*{user.id}">
 			<label>Titolo</label>
 			<input class="mb-3" type="text" name="title" th:value="*{title}">
 			<small 
