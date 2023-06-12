@@ -23,7 +23,7 @@ public class AuthConfiguration {
 		return 
 			http.csrf(c -> c.disable())
 				.authorizeHttpRequests(a -> a
-						.requestMatchers("/auth/**").hasAnyAuthority("SUPERADMIN", "ADMIN")
+						.requestMatchers("/admin/**").hasAnyAuthority("SUPERADMIN")
 						.requestMatchers("/user/**").hasAnyAuthority("ADMIN")
 						.requestMatchers("/**", "/api/**").permitAll()
 			).formLogin(f -> f.defaultSuccessUrl("/").permitAll()

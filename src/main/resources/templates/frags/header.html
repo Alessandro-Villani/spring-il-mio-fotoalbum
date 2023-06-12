@@ -14,10 +14,13 @@
           <a class="nav-link" th:href="@{/}">Home</a>
         </li>
         <li class="nav-item">
+          <a sec:authorize="hasAuthority('SUPERADMIN')" class="nav-link" th:href="@{/admin/auth/moderation}">Moderazione</a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link" sec:authorize="hasAuthority('ADMIN')" th:href="@{/user/auth}">Le mie foto</a>
         </li>
         <li class="nav-item">
-          <a sec:authorize="hasAuthority('SUPERADMIN')" class="nav-link" th:href="@{/auth/categories}">Categorie</a>
+          <a sec:authorize="hasAuthority('SUPERADMIN')" class="nav-link" th:href="@{/admin/auth/categories}">Categorie</a>
         </li>
       </ul>
     </div>

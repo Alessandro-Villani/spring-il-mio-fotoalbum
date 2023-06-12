@@ -15,7 +15,7 @@
 	<th:block th:replace="frags/header :: header"></th:block>
 	<main class="container text-center">
 		<h1 class="mb-5">Modifica Categoria</h1>
-		<form th:action="@{/auth/categories/update/{id} (id=*{id})}" class="d-flex flex-column align-items-center" method="POST">
+		<form th:action="@{/admin/auth/categories/update/{id} (id=*{id})}" class="d-flex flex-column align-items-center" method="POST">
 			<label for="name">Nome</label>
 			<input type="text" id="name" name="name" th:value="${category.name}">
 			<small 

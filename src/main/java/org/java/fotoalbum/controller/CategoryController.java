@@ -27,7 +27,7 @@ public class CategoryController {
 	@Autowired
 	private PhotoService photoService;
 	
-	@GetMapping("/auth/categories")
+	@GetMapping("admin/auth/categories")
 	public String goToCategoryIndex(Model model) {
 		
 		List<Category> categories = categoryService.findAll();
@@ -38,7 +38,7 @@ public class CategoryController {
 		
 	}
 	
-	@GetMapping("/auth/categories/create")
+	@GetMapping("admin/auth/categories/create")
 	public String createCategory(Model model) {
 		
 		model.addAttribute("category", new Category());
@@ -47,7 +47,7 @@ public class CategoryController {
 		
 	}
 	
-	@PostMapping("/auth/categories/create")
+	@PostMapping("admin/auth/categories/create")
 	public String storeCategory(Model model, @Valid @ModelAttribute Category category, BindingResult bindingResult) {
 		
 		if(bindingResult.hasErrors()) {
@@ -61,11 +61,11 @@ public class CategoryController {
 		
 		categoryService.save(category);
 		
-		return "redirect:/auth/categories";
+		return "redirect:/admin/auth/categories";
 		
 	}
 	
-	@GetMapping("auth/categories/edit/{id}")
+	@GetMapping("admin/auth/categories/edit/{id}")
 	public String editCategory(Model model, @PathVariable int id) {
 		
 		
@@ -79,7 +79,7 @@ public class CategoryController {
 		
 	}
 	
-	@PostMapping("auth/categories/update/{id}")
+	@PostMapping("admin/auth/categories/update/{id}")
 	public String updatePizza(Model model, @PathVariable int id, @ModelAttribute @Valid Category category, BindingResult bindingResult) {
 		
 		
@@ -95,11 +95,11 @@ public class CategoryController {
 
 		categoryService.save(category);
 		
-		return "redirect:/auth/categories";
+		return "redirect:/admin/auth/categories";
 
 	}
 	
-	@PostMapping("auth/categories/delete/{id}")
+	@PostMapping("admin/auth/categories/delete/{id}")
 	public String deleteCategory(@PathVariable("id") int id) {
 		
 		Category category = categoryService.findById(id).get();
@@ -113,7 +113,7 @@ public class CategoryController {
 		
 		categoryService.delete(category);
 		
-		return "redirect:/auth/categories";
+		return "redirect:/admin/auth/categories";
 	}
 
 }

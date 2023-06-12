@@ -50,6 +50,10 @@ public class Photo {
 	@JsonManagedReference
 	private User user;
 	
+	@OneToMany(mappedBy = "photo", cascade = CascadeType.REMOVE)
+	@JsonManagedReference
+	private List<Comment> comments;
+	
 	public Photo() {}
 	
 	public Photo(String title, String description, String imageUrl, Boolean visibility, User user) {
@@ -67,6 +71,14 @@ public class Photo {
 		this(title, description, imageUrl, visibility, user);
 		
 		setCategories(categories);
+		
+	}
+	
+	public Photo (String title, String description, String imageUrl, Boolean visibility, User user, Comment... comments) {
+		
+		this(title, description, imageUrl, visibility, user);
+		
+		setComments(comments);
 		
 	}
 
@@ -142,8 +154,6 @@ public class Photo {
 		this.messages = messages;
 	}
 	
-	
-
 	public User getUser() {
 		return user;
 	}
@@ -152,6 +162,20 @@ public class Photo {
 		this.user = user;
 	}
 
+	public List<Comment> getComments() {
+		return comments;
+	}
+	
+	public void setComments(List<Comment> comments) {
+		this.comments = comments;
+	}
+	
+	public void setComments(Comment[] comments) {
+		
+		setComments(Arrays.asList(comments));
+		
+	}
+	
 	@Override
 	public String toString() {
 		

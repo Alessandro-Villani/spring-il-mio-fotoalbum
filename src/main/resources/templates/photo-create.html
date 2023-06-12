@@ -40,10 +40,7 @@
 			>
 				[[ ${errors.getFieldError('imageUrl').defaultMessage} ]]
 			</small>
-			<div class="mb-5">
-				<label for="visibility">Visibile</label>
-				<input type="checkbox" id="visibility" name="visibility" th:checked="${photo.visibility}">			
-			</div>
+				<input type="hidden" id="visibility" name="visibility" value="true">			
 			<h6 class="mb-3">Categorie</h6>
 			<div class="row row-cols-2 mb-5 justify-content-start">
 				<div class="col mb-3 text-start" th:each="category : ${categories}" th:object="${category}">

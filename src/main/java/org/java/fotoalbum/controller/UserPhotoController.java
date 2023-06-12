@@ -65,7 +65,7 @@ public class UserPhotoController {
 		model.addAttribute("photos", photos);
 		model.addAttribute("searchTerm", title);
 		
-		return "home";
+		return "my-photos";
 		
 	}
 	
@@ -117,7 +117,7 @@ public class UserPhotoController {
 		Optional<Photo> optPhoto = photoService.findById(id);
 		Photo photo = optPhoto.get();
 		
-		if(!user.getPhotos().contains(photo)) {
+		if(!user.getPhotos().contains(photo) || photo.getVisibility() == false) {
 			
 			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
 			
@@ -175,6 +175,26 @@ public class UserPhotoController {
 		}
 		
 		
+	}
+	
+	@GetMapping("user/auth/photos/{id}/comments")
+	public Object getComments(@PathVariable("id") int id, Principal principal, Model model) {
+		
+		String userName = principal.getName();
+		
+		User user = (User) userService.loadUserByUsername(userName);
+		
+		Photo photo = photoService.findById(id).get();
+		
+		if(user.getPhotos().contains(photo)) {
+			model.addAttribute("photo", photo);
+			
+			return "comments";
+		} else {
+			
+			return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+			
+		}
 	}
 	
 	

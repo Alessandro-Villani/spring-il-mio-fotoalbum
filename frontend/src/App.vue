@@ -34,6 +34,14 @@ export default {
     closeMessageForm() {
       this.messageFormIsShown = false;
       this.photoId = null;
+    },
+    sendComment(comment) {
+      axios.post(baseApiUrl + 'comments/store', comment)
+        .then(() => {
+          this.fetchPhotos();
+        })
+        .catch(e => console.log(e))
+
     }
 
   },
@@ -52,7 +60,8 @@ export default {
     </div>
     <h1 class="text-white text-center mt-5" v-if="!photos.length">Nessun risultato</h1>
     <div class="row row-cols-1">
-      <PhotoCard v-for="photo in photos" :photo="photo" @message="showMessageForm" />
+      <PhotoCard v-for="photo in photos" :key="photo.id" :photo="photo" @message="showMessageForm"
+        @comment="sendComment" />
       <MessageForm v-if="messageFormIsShown" :photoId="photoId" @close="closeMessageForm" />
     </div>
   </main>

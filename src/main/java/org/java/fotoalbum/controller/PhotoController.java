@@ -27,25 +27,37 @@ public class PhotoController {
 	private UserService userService;
 	
 	@GetMapping("/")
-	public String goToHomePage(Model model) {
+	public String goToHome(Model model, Principal principal) {
+		
+		if(principal != null) {
+			
+			String userName = principal.getName();
+			model.addAttribute("userName", userName);
+		} else model.addAttribute("username", null);
+		
+		return "home";
+	}
+	
+	@GetMapping("admin/auth/moderation")
+	public String goToModerationPage(Model model) {
 		
 		List<Photo> photos = photoService.findAll();
 		
 		model.addAttribute("photos", photos);
 		
-		return "home";
+		return "moderation";
 		
 	}
 	
-	@PostMapping("/")
-	public String homeSearch(Model model, @RequestParam(required = false) String title) {
+	@PostMapping("admin/auth/moderation")
+	public String moderationSearch(Model model, @RequestParam(required = false) String title) {
 		
 		List<Photo> photos = photoService.findByTitleContaining(title);
 		
 		model.addAttribute("photos", photos);
 		model.addAttribute("searchTerm", title);
 		
-		return "home";
+		return "moderation";
 		
 	}
 	
@@ -82,7 +94,7 @@ public class PhotoController {
 		
 		photoService.save(photo);
 		
-		return "redirect:/";
+		return "redirect:/admin/auth/moderation";
 		
 	}
 	

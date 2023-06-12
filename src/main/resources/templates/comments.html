@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8">
+<link rel="stylesheet" th:href="@{/webjars/bootstrap/5.2.3/css/bootstrap.min.css}"/>
+<link
+	rel="stylesheet"
+	href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+	integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+	crossorigin="anonymous"
+/>
+<title>Commenti per [[ ${photo.title} ]]</title>
+</head>
+<body th:object="${photo}">
+	<th:block th:replace="frags/header :: header"></th:block>
+	<main class="container">
+		<h1 class="my-5 text-center">Commenti per [[ *{title} ]]</h1>
+		<div class="d-flex justify-content-center">
+			<img th:if="*{visibility}" class="img-fluid mb-3" th:alt="*{title}" th:src="*{imageUrl}">
+			<img th:unless="*{visibility}" class="img-fluid mb-3" alt="banned" src="https://t4.ftcdn.net/jpg/00/92/53/53/360_F_92535322_LoiaQQSi2g37y0Ty4hqL0AthFQE12wRE.jpg">		
+		</div>
+		<h3 class="my-5 text-center" th:if="${photo.comments.isEmpty()}">Non ci sono commenti</h3>
+		<div th:each="comment : *{comments}" class="border rounded p-3 mb-2 shadow-sm">
+			<p class="mb-0">[[ ${comment.content} ]]</p>
+		</div>
+	</main>
+</body>
+</html>
