@@ -20,7 +20,7 @@ export default {
             this.comment.content = ''
         }
     },
-    emits: ['message', 'comment'],
+    emits: ['message', 'comment', 'category'],
 
 }
 </script>
@@ -34,7 +34,8 @@ export default {
                 <img class="img-fluid mb-3" :src="'data:image/png;base64,' + photo.reimage" :alt="photo.title">
                 <p>{{ photo.description }}</p>
                 <div class="categories mb-3">
-                    <small v-for="category in photo.categories"> #{{ category.name }}</small>
+                    <small class="category me-1" v-for="category in photo.categories"
+                        @click="$emit('category', category.id)">#{{ category.name }}</small>
                 </div>
                 <button class="btn btn-primary mb-3" @click="$emit('message', photo.id)"><i
                         class="fa-solid fa-envelope"></i></button>
@@ -60,6 +61,19 @@ export default {
 
     .comment {
         border-bottom: 1px solid lightblue;
+
+    }
+
+    .category {
+
+        color: blue;
+        cursor: pointer;
+
+        &:hover {
+
+            text-decoration: underline;
+
+        }
 
     }
 }

@@ -3,7 +3,9 @@ package org.java.fotoalbum.controller.api;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.java.fotoalbum.pojo.Category;
 import org.java.fotoalbum.pojo.Photo;
+import org.java.fotoalbum.services.CategoryService;
 import org.java.fotoalbum.services.PhotoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,14 +25,37 @@ public class PhotoApiController {
 	@Autowired
 	private PhotoService photoService;
 	
+	@Autowired
+	private CategoryService categoryService;
+	
 	@GetMapping("/photos")
-	public ResponseEntity<List<Photo>> getAllPhoto(@RequestParam(required = false) String title){
+	public ResponseEntity<List<Photo>> getAllPhoto(@RequestParam(required = false) String title, @RequestParam(required = false) Integer categoryId){
 		
 		if(title != null && !title.isEmpty()) {
 			
 			List<Photo> photoList = photoService.findByTitleContaining(title);
 			photoList = photoList.stream()
 					.filter(photo -> photo.getVisibility() != null && photo.getVisibility() == true)
+					.collect(Collectors.toList());
+			if(categoryId != null) {
+				
+				Category category = categoryService.findById(categoryId).get();
+				photoList = photoList.stream()
+						.filter(photo -> photo.getCategories().contains(category))
+						.collect(Collectors.toList());
+				return new ResponseEntity<>(photoList, HttpStatus.OK);
+				
+			}
+			return new ResponseEntity<>(photoList, HttpStatus.OK);
+			
+		}
+		
+		if(categoryId != null) {
+			
+			List<Photo> photoList = photoService.findByVisibility(true);
+			Category category = categoryService.findById(categoryId).get();
+			photoList = photoList.stream()
+					.filter(photo -> photo.getCategories().contains(category))
 					.collect(Collectors.toList());
 			return new ResponseEntity<>(photoList, HttpStatus.OK);
 			
