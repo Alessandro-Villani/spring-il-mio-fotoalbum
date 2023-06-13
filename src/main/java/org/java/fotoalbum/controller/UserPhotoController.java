@@ -38,6 +38,7 @@ public class UserPhotoController {
 	@Autowired
 	private UserService userService;
 	
+	
 	@GetMapping("/user/auth")
 	public String goToMyPhotos(Model model, Principal principal) {
 		
@@ -136,8 +137,17 @@ public class UserPhotoController {
 	@PostMapping("user/auth/photos/update/{id}")
 	public String updatePhoto(Model model, @PathVariable int id, @ModelAttribute @Valid Photo photo, BindingResult bindingResult) {
 		
+		System.out.println(photo.getMpImage());
+		System.out.println(bindingResult);
 		
-		if(bindingResult.hasErrors()) {
+		if(photo.getMpImage() == null || photo.getMpImage().isEmpty()) {
+			Optional<Photo> optPhoto = photoService.findById(id);
+			Photo existingPhoto = optPhoto.get();
+			photo.setImage(existingPhoto.getImage());
+		}
+		
+		
+		if(bindingResult.hasErrors() && !bindingResult.hasFieldErrors("imagePresent")) {
 			
 			List<Category> categories = categoryService.findAll();
 			
@@ -148,7 +158,8 @@ public class UserPhotoController {
 			return "photo-edit";
 			
 		}
-
+		
+		
 		photoService.save(photo);
 		
 		return "redirect:/" + id;

@@ -11,7 +11,9 @@ export default {
                 email: '',
                 message: '',
                 photoId: this.photoId,
-            }
+            },
+            emailEmpty: false,
+            messageEmpty: false
         }
     },
     props: {
@@ -24,7 +26,12 @@ export default {
                 .then(() => {
                     this.$emit('close');
                 })
-                .catch(e => console.log(e))
+                .catch(e => {
+                    this.emailEmpty = false;
+                    this.messageEmpty = false;
+                    if (this.message.email === "") this.emailEmpty = true;
+                    if (this.message.message === "") this.messageEmpty = true;
+                })
         }
     }
 
@@ -38,10 +45,17 @@ export default {
                 <button type="button" class="close btn btn-danger" @click="$emit('close')"><i
                         class="fa-solid fa-xmark"></i></button>
                 <h5 class="mb-4">Invia Messaggio</h5>
-                <label for="email">Email</label>
-                <input class="mb-3" type="email" name="email" id="email" v-model="message.email">
-                <label for="message">Messaggio</label>
-                <textarea class="col-12 mb-5" name="message" id="message" rows="10" v-model="message.message"></textarea>
+                <div class="d-flex flex-column align-items-center mb-3">
+                    <label for="email">Email</label>
+                    <input class="mb-1" type="email" name="email" id="email" v-model="message.email">
+                    <small class="text-danger" v-if="emailEmpty">L'email è obbligatoria</small>
+                </div>
+                <div class="col-12 d-flex flex-column align-items-center mb-5">
+                    <label for="message">Messaggio</label>
+                    <textarea class="col-12 mb-1" name="message" id="message" rows="10"
+                        v-model="message.message"></textarea>
+                    <small class="text-danger" v-if="messageEmpty">Il messaggio è obbligatorio</small>
+                </div>
                 <button class="btn btn-success">Invia</button>
             </form>
         </div>

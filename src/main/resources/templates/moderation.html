@@ -24,7 +24,7 @@
 				<div  class="card p-3 h-100 shadow-sm">
 					<h3 class="my-3">[[ *{title} ]]</h3>
 					<h5 class=mb-3>Autore: [[ *{user.username} ]]</h5>
-					<img class="img-fluid mb-3" th:alt="*{title}" th:src="*{imageUrl}">
+					<img class="img-fluid mb-3" th:if="*{hasImage()}" th:src="@{'data:image/png;base64,'+*{getREImage()}}">
 					<p class="mb-3">[[*{description}]]</p>
 					<h5 th:unless="*{categories.isEmpty()}">Categorie</h5>
 					<ul class="list-unstyled">

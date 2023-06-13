@@ -31,8 +31,11 @@ export default {
             <div class="card d-flex flex-column align-items-center p-5">
                 <h2 class="mb-3">{{ photo.title.toUpperCase() }}</h2>
                 <h5 class="mb-3">Autore: {{ photo.user.username }}</h5>
-                <img class="img-fluid mb-3" :src="photo.imageUrl" :alt="photo.title">
+                <img class="img-fluid mb-3" :src="'data:image/png;base64,' + photo.reimage" :alt="photo.title">
                 <p>{{ photo.description }}</p>
+                <div class="categories mb-3">
+                    <small v-for="category in photo.categories"> #{{ category.name }}</small>
+                </div>
                 <button class="btn btn-primary mb-3" @click="$emit('message', photo.id)"><i
                         class="fa-solid fa-envelope"></i></button>
                 <div class="comments col-12 border rounded p-2 bg-light">

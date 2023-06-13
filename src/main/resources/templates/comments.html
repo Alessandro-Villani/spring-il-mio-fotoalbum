@@ -16,7 +16,7 @@
 	<main class="container">
 		<h1 class="my-5 text-center">Commenti per [[ *{title} ]]</h1>
 		<div class="d-flex justify-content-center">
-			<img th:if="*{visibility}" class="img-fluid mb-3" th:alt="*{title}" th:src="*{imageUrl}">
+			<img class="img-fluid mb-3" th:if="${photo.hasImage() && photo.visibility}" th:src="@{'data:image/png;base64,'+*{getREImage()}}">
 			<img th:unless="*{visibility}" class="img-fluid mb-3" alt="banned" src="https://t4.ftcdn.net/jpg/00/92/53/53/360_F_92535322_LoiaQQSi2g37y0Ty4hqL0AthFQE12wRE.jpg">		
 		</div>
 		<h3 class="my-5 text-center" th:if="${photo.comments.isEmpty()}">Non ci sono commenti</h3>
